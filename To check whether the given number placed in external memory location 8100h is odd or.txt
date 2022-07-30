@@ -1,0 +1,10 @@
+	ORG 0000H
+	MOV DPTR, #8100H ; get the input data from source memory location
+	MOVX A,@DPTR
+	RRC A ; get the 0th bit of input data to carry flag
+	JC ODD ; if 0th bit=1, input number is odd
+	MOV R1, #11H ; store “11” in R1 to indicate even number
+	SJMP LAST
+ODD: 	MOV R1, #0FFH ; store “FF” in R1 to indicate odd number
+STOP: SJMP STOP
+	END

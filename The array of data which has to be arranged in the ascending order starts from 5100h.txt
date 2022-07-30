@@ -1,0 +1,23 @@
+	ORG 0000H
+	MOV R1, #04H ; initialize the step count (outer loop)
+L1:   MOV A, R1 ; move the count to accumulator
+	MOV R2, A ; move accumulator content to R2 (comparison) (inner loop)
+	MOV DPTR, #5100H ; Initialize the external memory location
+L2:   MOVX A,@DPTR ; get the data from memory to accumulator
+	MOV B, A ; move the accumulator content to B register
+	INC DPTR ; increment the external memory location.
+	MOVX A, @DPTR ; get the data from memory to accumulator
+	CJNE A, B, L3 ; compare accumulator content and B register content, if not equal Jump to label „L3‟
+	SJMP L5 ; short jump to label L5
+L3:   JC L4 ; If A & B are not equal, then check CY = 1(A<B); and if so jump to label „L4‟
+	SJMP L5 ; short jump to label L5
+L4:   XCH A, B ; Exchange A & B
+	MOVX @DPTR, A ; move accumulator content to external memory
+	DEC DPL ; decrement the lower byte of external memory
+	XCH A, B ; Exchange A & B
+	MOVX @DPTR, A ; move accumulator content to external memory
+	INC DPTR ; increment the external memory location
+L5:   DJNZ R2, L2 ; decrement comparison count, if count! = 0 then jump to ; label L2‟.
+	DJNZ R1, L1 ; decrement step count, if count! = 0 then jump to label „L1‟
+STOP: SJMP STOP 
+	END

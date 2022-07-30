@@ -1,0 +1,13 @@
+	ORG 0000H
+	MOV DPTR, #8100H ; get the source address
+	MOVX A, @DPTR ; get the input data to accumulator	
+	MOV B, A ; move the input data to B register
+	MUL AB ; get the square of the number
+	INC DPTR ; get the result+1 address to store the square result
+	INC DPTR
+	MOVX @DPTR, A ; save the lower byte of the result
+	DEC DPL ; get the result memory location
+	MOV A, B ; get the upper byte of the result to the Accumulator
+	MOVX @DPTR, A ; store the upper byte of the result to memory location
+STOP: SJMP $
+	END

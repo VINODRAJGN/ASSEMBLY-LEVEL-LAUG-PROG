@@ -1,0 +1,16 @@
+	ORG 0000H
+	MOV DPTR, #8100H 	; get the input data (decimal number) memory location
+	MOVX A,@DPTR 	; get the input data (decimal number) to accumulator
+	MOV B, A 		; get the data to register B
+	ANL A, #0FH 	; mask off the upper nibble of the input data
+	MOV R1, A 		; save the accumulator data in register R1
+	MOV A, B		; get the input data to accumulator
+	ANL A, #0F0H	; mask off the lower nibble
+	SWAP A 		; interchange the upper and lower nibble
+	MOV B, #0AH		; get the multiplier to register B
+	MUL AB		; multiply upper nibble of input data with 0Ah
+	ADD A, R1 		; add multiplied data with input data‟s lower nibble value
+	INC DPTR 		; get the result memory location address to DPTR
+	MOVX @DPTR, A 	; store the hex decimal value in the result memory location
+STOP: SJMP STOP
+	END

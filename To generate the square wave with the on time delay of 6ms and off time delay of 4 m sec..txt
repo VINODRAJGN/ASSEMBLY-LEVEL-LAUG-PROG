@@ -1,0 +1,19 @@
+	ORG 0000H
+BACK: MOV P1, #00H	; generate OFF time through P1
+	LCALL DELAY 	; Call 1ms delay subroutine twice to get 2ms
+	LCALL DELAY
+	MOV P1, #0FFH 	; generate ON time through P1
+	LCALL DELAY		; Call 1ms delay subroutine four times to get 4ms
+	LCALL DELAY
+	LCALL DELAY
+	LCALL DELAY
+	SJMP BACK 		; repeat the processes forever
+DELAY: MOV TMOD, #01H 	; configure the timer0 in mode1
+	MOV TL0, #0cdH 	; set the initial value in timer register for 2ms
+	MOV TH0, #0F8H
+	SETB TR0 		; start the timer
+REPEAT: JNB TF0, REPEAT ; wait until timer overflows
+	CLR TR0 		; halt the timer
+	CLR TF0 		; clear the timer0 overflow interrupt
+	RET 			; ret to the main program
+	END

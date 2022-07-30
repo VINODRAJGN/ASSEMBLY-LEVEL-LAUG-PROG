@@ -1,0 +1,14 @@
+	ORG 0000H
+	MOV DPTR, #8100H ; get the divisor data address
+	MOVX A, @DPTR ; get the divisor to accumulator
+	MOV B, A ; save the divisor in the register B
+	MOV DPTR, #8200H ; get the dividend data address
+	MOVX A, @DPTR ; get the dividend to accumulator
+	DIV AB ; divide A/B
+	MOV DPTR, #8300H ; get the quotient memory address to DPTR
+	MOVX @DPTR, A ; store the quotient in 8300h memory location
+	MOV A, B ; get the remainder to accumulator
+	INC DPTR ; get the next address to store the remainder
+	MOVX @DPTR, A ; store the remainder in 8301h memory location
+STOP: SJMP $
+	END

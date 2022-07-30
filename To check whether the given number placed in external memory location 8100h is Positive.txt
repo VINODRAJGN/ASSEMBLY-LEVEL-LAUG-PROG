@@ -1,0 +1,10 @@
+		ORG 0000H
+		MOV DPTR, #8100H 	; get the input data from source memory location
+		MOVX A,@DPTR
+		RLC A			; get the 7th bit of input data to carry flag
+		JC NEGATIVE 	; if 7th bit=1, input number is negative
+		MOV R1, #11H	; store “11” in R1 to indicate positive number
+		SJMP LAST
+NEGATIVE: 	MOV R1, #0FFH	; store “FF” in R1 to indicate negative number
+STOP: 	SJMP STOP
+		END

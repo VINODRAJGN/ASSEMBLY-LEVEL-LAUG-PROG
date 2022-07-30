@@ -1,0 +1,17 @@
+	ORG 0000H
+	MOV R1, #04H ; initialize the count
+	MOV DPTR, #5100H ; initialize the external memory location
+	MOVX A,@DPTR ; get the data from memory to accumulator
+BACK: MOV B, A ; move the content from accumulator to B register
+	INC DPTR ; increment the external memory location
+	MOVX A,@DPTR ; get the data from memory to accumulator
+	CJNE A, B, NEXT ; compare accumulator content and B register content, if not equal Jump to label „NEXT‟
+	DJNZ R1, BACK ; if A & B are equal, then decrement count, if count! =0 Jump to label „BACK‟
+	SJMP LAST ; If count=0, then short jump to label‟ LAST‟
+NEXT: JC L2 ; If A & B are not equal, then check for CY= 1(A<B); and if so jump to label „L2‟
+	XCH A, B ; else if CY! =1, exchange A & B
+L2:   DJNZ R1, BACK ; Decrement count, if count! = 0, jump to label,‟ BACK‟
+LAST: MOV DPTR, #8100H ; Initialize new memory location for storing smallest data
+	MOVX @DPTR, A ; move the smallest data from accumulator to new memory Location
+STOP: SJMP STOP
+	END

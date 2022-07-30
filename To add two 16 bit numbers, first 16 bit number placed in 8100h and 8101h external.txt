@@ -1,0 +1,23 @@
+	ORG 0000H
+	MOV DPTR,#8101H ; initialize the external memory location
+	MOVX A,@DPTR ; get the 1st LSB data from memory to accumulator
+	MOV B,A ; move the content from accumulator to B register
+	MOV DPTR,#8201H ; initialize new memory location
+	MOVX A,@DPTR ; get the 2nd LSB data from memory to accumulator
+	ADD A,B ; add the content of A and B
+	MOV DPTR,#8302H ; initialize new memory location
+	MOVX @DPTR,A ; move the accumulator content to memory
+	MOV DPTR,#8100H ; initialize new memory location
+	MOVX A,@DPTR ; get the 1st MSB data from memory to accumulator
+	MOV B,A ; move the content from accumulator to B register
+	MOV DPTR,#8200H ; initialize new memory location
+	MOVX A,@DPTR ; get the 2nd MSB data from memory to accumulator
+	ADDC A,B ; add the content of A and B with carry
+	MOV DPTR,#8301H ; initialize new memory location
+	MOVX @DPTR,A ; move the accumulator content to memory
+	MOV A,#00H ; move the value „00‟ to accumulator
+	ADDC A,#00H ; add accumulator data with carry
+	DEC DPL ; decrement lower byte of memory
+	MOVX @DPTR,A ; move the accumulator content to memory
+	SJMP $
+	END

@@ -1,0 +1,15 @@
+		ORG 0000H
+		MOV A, #00H		; initialize P1
+BACK: 	MOV P1, A 		; generate square wave signal
+		CPL A
+		LCALL DELAY 	; call 10ms delay
+		SJMP BACK 		; repeat forever
+DELAY:	MOV TMOD, #01H 	; configure the timer0 in mode1
+		MOV TL0, #000H 	; set the initial value in timer register for 5ms
+		MOV TH0, #0dcH
+		SETB TR0 		; start the timer
+REPEAT:	JNB TF0, REPEAT 	; wait until timer overflows
+		CLR TR0 		; halt the timer
+		CLR TF0 		; clear the timer0 overflow interrupt
+		RET 			; ret to the main program
+		END

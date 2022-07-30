@@ -1,0 +1,19 @@
+	ORG 0000H
+	MOV DPTR, #8100H 	; get the input data (hex number) memory location
+	MOVX A,@DPTR 	; get the input data to accumulator
+	MOV B, #0AH 	; get the divisor to B register
+	DIV AB		; divide input data by 10d
+	MOV R1, B 		; store the remainder in register in R1
+	MOV B, #0AH 	; get the divisor to B register
+	DIV AB 		; divide the quotient of previous division by 10d
+	MOV R0, A 		; move the quotient to R0 register
+	MOV A, B 		; get the remainder to accumulator
+	SWAP A 		; interchange upper and lower nibble
+	ORL A, R1 		; concatenate units and tens place
+	MOV DPTR, #8201H 	; get the result+1 memory location
+	MOVX @DPTR, A 	; store the tens and units (accumulator) place result
+	DEC DPL 		; get the result+0 memory address
+	MOV A, R0 		; get the hundreds place value of the output to accumulator
+	MOVX @DPTR, A 	; store the result
+STOP:	SJMP STOP
+	END

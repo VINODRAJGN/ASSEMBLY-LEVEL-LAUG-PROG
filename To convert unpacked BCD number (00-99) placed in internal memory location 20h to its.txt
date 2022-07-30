@@ -1,0 +1,15 @@
+	ORG 0000H
+	MOV R0, #20H 	; get the source memory address in R0
+	MOV R1, #40H 	; get the destination memory address in R1
+	MOV A,@R0 		; get the input data to accumulator
+	ANL A, #0F0H	; mask off the lower nibble
+	SWAP A 		; exchange upper and lower nibble
+	ORL A, #30H 	; convert upper nibble to ASCII
+	MOV @R1, A 		; send the ASCII data to destination memory
+	MOV A,@R0 		; get the input data to accumulator
+	ANL A, #0FH 	; mask off the upper nibble
+	ORL A, #30H 	; convert lower nibble to ASCII
+	INC R1 		; increment the destination memory location
+	MOV @R1, A 		; send the ASCII data to destination memory
+STOP:	SJMP STOP
+	END

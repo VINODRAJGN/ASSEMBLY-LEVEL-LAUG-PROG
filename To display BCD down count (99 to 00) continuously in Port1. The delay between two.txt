@@ -1,0 +1,18 @@
+	ORG 0000H
+	MOV A, #99H 	; get the first BCD value to accumulator
+L1:	MOV P1, A 		; display the count in P1
+	ADD A, #99H 	; get the next BCD down count value
+	DA A 			; decimal adjust the count
+	LCALL DELAY 	; call the delay of 1sec
+	SJMP L1 		; repeat forever
+DELAY:MOV TMOD, #01H 	; configure timer0 in mode1
+	MOV R0, #0EH 	; get the count for repetition of timer register count (14 d)
+BACK: MOV TL0, #00H 	; set the initial count for “0.071 second x 14 = 1 second”
+	MOV TH0, #00H
+	SETB TR0 		; start the timer
+REPEAT: JNB TF0, REPEAT ; wait until timer overflows
+	CLR TR0 		; halt the timer
+	CLR TF0 		; clear the timer0 overflow interrupt
+	DJNZ R0, BACK 	; if repetition count != 0, go to label back
+	RET			 ; return to the main program
+	END

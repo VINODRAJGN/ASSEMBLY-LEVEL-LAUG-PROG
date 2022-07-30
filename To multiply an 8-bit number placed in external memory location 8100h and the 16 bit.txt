@@ -1,0 +1,24 @@
+	ORG 0000H
+	MOV DPTR, #8100H ; initialize the external memory location
+	MOVX A,@DPTR ; get the data from memory to accumulator
+	MOV B, A ; move the content from accumulator to B register
+	MOV R0, A ; get the multiplier to R0 register
+	MOV DPTR, #8201H ; get the lower byte of multiplicand to accumulator
+	MOVX A,@DPTR
+	MUL AB ; multiply - lower byte of Multiplicand * Multiplier
+	MOV DPTR, #8302H ; store the lower byte result in result+2 memory
+	MOVX @DPTR, A
+	MOV R1, B ; move the upper byte result in R1
+	MOV DPTR, #8200H ; get the upper byte of multiplicand to accumulator
+	MOVX A, @DPTR
+	MOV B, R0 ; get the multiplier to B register
+	MUL AB ; multiply - upper byte multiplicand* Multiplier
+	ADDC A, R1 ; Add lower byte result with R1 (upper byte result of lower multiplicand multiplication)
+	MOV DPTR, #8301H ; store the result in result memory+1 location
+	MOVX @DPTR, A
+	MOV A, B ; get the upper byte result of upper multiplicand
+	ADDC A, #00H ; add the carry to upper multiplicand result
+	DEC DPL
+	MOVX @DPTR, A ; store the result in result memory location
+STOP: SJMP STOP
+	END

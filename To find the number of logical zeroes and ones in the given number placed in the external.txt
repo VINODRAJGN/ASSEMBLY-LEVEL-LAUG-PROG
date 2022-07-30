@@ -1,0 +1,14 @@
+		ORG 0000H
+		MOV DPTR, #8100H 	 ; get the input data from source memory location
+		MOVX A,@DPTR
+		MOV R1, #08H	 ; keep the count in R1 to check 8 bits of input data
+		MOV R2, #00H 	 ; counter for logical ones
+		MOV R3, #00H	 ; counter for logical zeroes
+NEXTBIT: 	RRC A 		 ; get the LSB bit to carry flag
+		JC ONES 		 ; if bit is one jump to label ONES
+		INC R3		 ; if no carry increment zero counter
+		SJMP LAST
+ONES: 	INC R2 		 ; if no carry increment ones counter
+LAST:		DJNZ R1, NEXTBIT   ; if all the 8 bits are not checked, go back to label NEXTBIT
+STOP:		SJMP $
+		END

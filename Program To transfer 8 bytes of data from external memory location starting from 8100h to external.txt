@@ -1,0 +1,14 @@
+	ORG 0000H
+	MOV R0, #08H ; initialize the count
+	MOV R1, #81H ; initialize the source memory location higher byte
+	MOV R2, #82H ; initialize the destination memory location higher byte
+	MOV R3, #00H ; initialize the destination & source location lower byte
+BACK: MOV DPH, R1 ; get the source memory location address to DPTR
+	MOV DPL, R3
+	MOVX A, @DPTR ; get the data from source memory to Accumulator
+	MOV DPH, R2 ; get the destination memory location address to DPTR
+	MOVX @DPTR, A ; copy the accumulator content to destination memory
+	INC R3 ; increment to next source and destination memory
+	DJNZ R0, BACK ; decrement count. If count! =0 go to label “BACK”
+STOP:	SJMP STOP 
+	END

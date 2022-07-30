@@ -1,0 +1,24 @@
+	ORG 0000H
+	MOV DPTR, #8100H ; get the source address
+	MOVX A,@DPTR ; get the input data to accumulator
+	MOV B, A ; move the input data to B register
+	MOV R0, A ; copy the input data to the register R0
+	MUL AB ; get the square of the input number
+	MOV R1, B ; copy the upper byte of the square result in the R1 register
+	MOV B, R0 ; get the input data to register B
+	MUL AB ; get the lower byte of the cube result
+	MOV DPTR, #8202H ; get the result+2 memory location
+	MOVX @DPTR, A ; store the lower byte of cube output in result+2 memory
+	MOV R2, B ; store the upper byte partial result in R2
+	MOV B, R1 ; get the previous partial result to register B
+	MOV A, R0 ; get the input to accumulator
+	MUL AB ; get the second upper byte partial result
+	ADDC A, R2 ; add the input data to the partial result with the previous carry
+	DEC DPL ; get the result+1 memory location
+	MOVX @DPTR, A ; store the 2nd byte of cube output in result+1 memory
+	MOV A, B ; get the upper byte of the multiplied output to accumulator
+	ADDC A, #00H ; add with the previous carry
+	DEC DPL ; get the result memory location
+	MOVX @DPTR, A store the 3rd byte of cube output in result memory
+STOP:	SJMP STOP
+	END
